@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Microsoft.Owin.Hosting;
 using Owin;
 
@@ -31,16 +32,6 @@ namespace KatanaIntro
         {
             app.Use(async (environment, next) =>
             {
-                foreach (var pair in environment.Environment)
-                {
-                    Console.WriteLine("{0} : {1}", pair.Key, pair.Value);
-                }
-
-                await next();
-            });
-
-            app.Use(async (environment, next) =>
-            {
                 Console.WriteLine("Requesting : " + environment.Request.Path);
 
                 await next();
@@ -49,7 +40,16 @@ namespace KatanaIntro
 
             });
 
+            ConfigureWebApi(app);
+
             app.UseHelloWorld();
+        }
+
+        private void ConfigureWebApi(IAppBuilder app)
+        {
+            var config = new HttpConfiguration();
+            config.Routes.MapHttpRoute("DefaultApi", "api/{controller}/{id}", new {id = RouteParameter.Optional});
+            app.UseWebApi(config);
         }
     }
 
