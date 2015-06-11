@@ -6,6 +6,8 @@ using Owin;
 
 namespace KatanaIntro
 {
+    using AppFunc = Func<IDictionary<string, object>, Task>;
+
     class Program
     {
         static void Main(string[] args)
@@ -32,9 +34,9 @@ namespace KatanaIntro
 
     public class HelloWorldComponent
     {
-        private Func<IDictionary<string, object>, Task> _next;
+        private AppFunc _next;
 
-        public HelloWorldComponent(Func<IDictionary<string, object>, Task> next)
+        public HelloWorldComponent(AppFunc next)
         {
             _next = next;
         }
