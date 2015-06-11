@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Owin.Hosting;
 using Owin;
@@ -41,9 +42,13 @@ namespace KatanaIntro
             _next = next;
         }
 
-        public async Task Invoke(IDictionary<string, object> environment)
+        public Task Invoke(IDictionary<string, object> environment)
         {
-            await _next(environment);
+            var respone = environment["owin.ResponseBody"] as Stream;
+            using (var writer = new StreamWriter(respone))
+            {
+                return writer.WriteAsync("Hello!!");
+            }
         }
     }
 }
